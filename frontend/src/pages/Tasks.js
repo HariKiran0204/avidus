@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { tasksAPI } from '../utils/api';
 import { Card, Button, Input, Select, Table, Pagination, Alert } from '../components/UI';
@@ -6,6 +7,7 @@ import Navbar from '../components/Navbar';
 
 const Tasks = () => {
   const { user } = useAuth();
+  const location = useLocation();
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -24,6 +26,12 @@ const Tasks = () => {
   useEffect(() => {
     fetchTasks();
   }, [page, filters]);
+
+  useEffect(() => {
+    if (location.state?.openCreate) {
+      setShowCreateForm(true);
+    }
+  }, [location.state]);
 
   const fetchTasks = async () => {
     setLoading(true);

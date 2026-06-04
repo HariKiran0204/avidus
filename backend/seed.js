@@ -8,6 +8,19 @@ const connectDB = require('./src/config/database');
 
 const seedDatabase = async () => {
   try {
+    // If a running server created an in-memory MongoDB, prefer its URI
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      const filePath = path.resolve(process.cwd(), '.mongouri');
+      if (!process.env.MONGODB_URI && fs.existsSync(filePath)) {
+        process.env.MONGODB_URI = fs.readFileSync(filePath, { encoding: 'utf8' }).trim();
+        console.log('Using in-memory MongoDB URI from .mongouri');
+      }
+    } catch (e) {
+      // ignore
+    }
+
     await connectDB();
     console.log('Connected to database');
 

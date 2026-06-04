@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 // Generate JWT Token
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
+  return jwt.sign({ id }, process.env.JWT_SECRET || 'avidus_default_secret_key_1234567890', {
     expiresIn: process.env.JWT_EXPIRE || '7d'
   });
 };

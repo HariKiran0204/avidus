@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import axiosInstance from '../utils/api';
 
 const AuthContext = createContext();
 
@@ -14,8 +15,11 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      // ensure the app's axios instance also has the auth header
+      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     } else {
       delete axios.defaults.headers.common['Authorization'];
+      delete axiosInstance.defaults.headers.common['Authorization'];
     }
   }, [token]);
 
@@ -47,6 +51,10 @@ export const AuthProvider = ({ children }) => {
         password
       });
       const { token, user } = response.data;
+      
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      
       setToken(token);
       setUser(user);
       localStorage.setItem('token', token);
@@ -63,6 +71,10 @@ export const AuthProvider = ({ children }) => {
         password
       });
       const { token, user } = response.data;
+      
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      
       setToken(token);
       setUser(user);
       localStorage.setItem('token', token);

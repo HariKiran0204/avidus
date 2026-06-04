@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { usersAPI, tasksAPI } from '../utils/api';
 import { Card, Alert } from '../components/UI';
@@ -17,6 +18,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchStats = async () => {
+      if (!user) return;
       try {
         let userStats = { totalUsers: 0, activeUsers: 0, inactiveUsers: 0 };
         let taskStats = { totalTasks: 0, completedTasks: 0, pendingTasks: 0 };
@@ -44,7 +46,7 @@ const Dashboard = () => {
     };
 
     fetchStats();
-  }, [isAdmin]);
+  }, [isAdmin, user]);
 
   return (
     <>
@@ -98,23 +100,23 @@ const Dashboard = () => {
         <Card style={styles.quickActionsCard}>
           <h2 style={styles.cardTitle}>Quick Actions</h2>
           <div style={styles.actionGrid}>
-            <a href="/tasks" style={styles.actionLink}>
+            <Link to="/tasks" style={styles.actionLink}>
               📝 View My Tasks
-            </a>
-            <a href="/tasks/create" style={styles.actionLink}>
+            </Link>
+            <Link to="/tasks" state={{ openCreate: true }} style={styles.actionLink}>
               ➕ Create New Task
-            </a>
+            </Link>
             {isAdmin && (
               <>
-                <a href="/admin/users" style={styles.actionLink}>
+                <Link to="/admin/users" style={styles.actionLink}>
                   👥 Manage Users
-                </a>
-                <a href="/admin/activity" style={styles.actionLink}>
+                </Link>
+                <Link to="/admin/activity" style={styles.actionLink}>
                   📊 View Activity Logs
-                </a>
-                <a href="/admin/analytics" style={styles.actionLink}>
+                </Link>
+                <Link to="/admin/analytics" style={styles.actionLink}>
                   📈 Analytics
-                </a>
+                </Link>
               </>
             )}
           </div>

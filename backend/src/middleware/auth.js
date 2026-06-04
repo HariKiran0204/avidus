@@ -14,7 +14,7 @@ const protect = async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'avidus_default_secret_key_1234567890');
     req.user = await User.findById(decoded.id);
     
     if (!req.user) {

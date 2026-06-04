@@ -36,7 +36,9 @@ exports.createTask = async (req, res) => {
       details: { title, priority }
     });
 
-    await task.populate('createdBy', 'name email').populate('assignedTo', 'name email');
+    // Populate references
+    await task.populate('createdBy', 'name email');
+    await task.populate('assignedTo', 'name email');
 
     res.status(201).json({
       success: true,

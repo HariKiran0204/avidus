@@ -12,6 +12,8 @@ const activityRoutes = require('./routes/activityRoutes');
 
 const app = express();
 
+const path = require('path');
+
 // Connect to database
 connectDB();
 
@@ -37,6 +39,18 @@ app.get('/api/health', (req, res) => {
     message: 'Server is running',
     timestamp: new Date()
   });
+});
+
+// Serve frontend static files
+const frontendBuildPath = path.join(__dirname, '../../frontend/build');
+app.use(express.static(frontendBuildPath));
+
+// Handle React routing, return all requests to React app
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api')) {
+    return next();
+  }
+  res.sendFile(path.join(frontendBuildPath, 'index.html'));
 });
 
 // Error handling middleware

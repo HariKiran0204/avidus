@@ -62,13 +62,6 @@ const Login = () => {
           <p style={styles.signupText}>
             Don't have an account? <Link to="/register" style={styles.link}>Register here</Link>
           </p>
-
-          <hr style={styles.divider} />
-          <p style={styles.demoText}>
-            <strong>Demo Credentials:</strong><br />
-            Admin: admin@example.com / password123<br />
-            User: user@example.com / password123
-          </p>
         </Card>
       </div>
     </div>
