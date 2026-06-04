@@ -13,6 +13,9 @@ export const AuthProvider = ({ children }) => {
 
   // Configure axios defaults
   useEffect(() => {
+    axios.defaults.headers.common['Bypass-Tunnel-Reminder'] = 'true';
+    axiosInstance.defaults.headers.common['Bypass-Tunnel-Reminder'] = 'true';
+    
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       // ensure the app's axios instance also has the auth header
