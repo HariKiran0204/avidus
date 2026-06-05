@@ -15,3 +15,6 @@ coverage/
 *.swp
 *.swo
 .git/
+.mongodb_data/
+.mongouri
+backend/.mongouri
