@@ -39,20 +39,31 @@ const connectDB = async () => {
   }
 
   try {
-    if (isProd) {
-      console.warn('⚠️ WARNING: Running with IN-MEMORY MongoDB in PRODUCTION mode! Data will not persist.');
+    const fs = require('fs');
+    const path = require('path');
+    const dbDir = path.resolve(process.cwd(), '.mongodb_data');
+    if (!fs.existsSync(dbDir)) {
+      fs.mkdirSync(dbDir, { recursive: true });
     }
-    console.log('Starting in-memory MongoDB...');
-    const mongod = await MongoMemoryServer.create();
+
+    if (isProd) {
+      console.log('Running with persistent local MongoDB database.');
+    }
+    console.log('Starting local persistent MongoDB...');
+    const mongod = await MongoMemoryServer.create({
+      instance: {
+        dbPath: dbDir,
+        storageEngine: 'wiredTiger',
+        persist: true
+      }
+    });
     mongoUri = mongod.getUri();
 
     // Persist the in-memory URI to a file so other processes (seed) can use it
     try {
-      const fs = require('fs');
-      const path = require('path');
       const filePath = path.resolve(process.cwd(), '.mongouri');
       fs.writeFileSync(filePath, mongoUri, { encoding: 'utf8' });
-      console.log(`Wrote in-memory MongoDB URI to ${filePath}`);
+      console.log(`Wrote MongoDB URI to ${filePath}`);
     } catch (fsErr) {
       console.warn('Could not write .mongouri file:', fsErr.message);
     }
